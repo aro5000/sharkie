@@ -85,7 +85,11 @@ func main () {
 
 	wg.Add(len(servers))
 	for _, i := range servers{
-		go MakeRequest(i, t)
+		if t.proto == "https://"{
+			go MakeHTTPSRequest(i, t)
+		}else {
+			go MakeHTTPRequest(i, t)
+		}
 	}
 
 	wg.Wait()
