@@ -21,76 +21,60 @@ func (x *Servers) String() string {
 var servers Servers
 var wg sync.WaitGroup
 
-type targetdata struct {
-	url   string
-	host  string
-	path  string
-	proto string
-	port  string
-	sleep float64
-}
-
 func main () {
-	var t targetdata
 	flag.Var(&servers, "s", "Server IP or hostname")
-	flag.StringVar(&t.url, "u", "", "URL to target")
-	flag.Float64Var(&t.sleep, "sleep", 1, "Time in seconds to sleep between requests")
+	flag.StringVar(&TDATA.Url, "u", "", "URL to target")
+	flag.Float64Var(&TDATA.Sleep, "sleep", 1, "Time in seconds to sleep between requests")
 	flag.Parse()
-	fmt.Println("Servers:", servers)
 	
 	// Get the host header from the URL
-	urlstr := strings.Split(t.url, "://")
+	urlstr := strings.Split(TDATA.Url, "://")
 
 	// assuming the URL string has http:// or https:// we will then split the rest to get the path
 	if len(urlstr) > 1 {
-		t.proto = urlstr[0] + "://"
+		TDATA.Proto = urlstr[0] + "://"
 		urlstr = strings.Split(urlstr[1], "/")
 	} else {
 		// if there is no '://' then we can just assume http://
-		t.proto = "http://"
+		TDATA.Proto = "http://"
 		urlstr = strings.Split(urlstr[0], "/")
 	}
 
 	// reconstruct full path
 	if len(urlstr) > 1 {
-		t.path = ""
+		TDATA.Path = ""
 		for i := 1; i < len(urlstr); i++{
-			t.path += "/" + urlstr[i]
+			TDATA.Path += "/" + urlstr[i]
 		}
 	} else {
 		// if there is not a '/' in the URL, then we can just assume it is the root.
-		t.path = "/"
+		TDATA.Path = "/"
 	}
 
 	// Splitting on ':' incase a port number was specified.
 	urlstr = strings.Split(urlstr[0], ":")
-	t.host = urlstr[0]
+	TDATA.Host = urlstr[0]
 	// get the port used
 	if len(urlstr) > 1 {
-		t.port = urlstr[1]
+		TDATA.Port = urlstr[1]
 	} else {
-		if t.proto == "https://"{
-			t.port = "443"
+		if TDATA.Proto == "https://"{
+			TDATA.Port = "443"
 		} else {
-			t.port = "80"
+			TDATA.Port = "80"
 		}
 	}
 
-	fmt.Println("URL:", t.url)
-	fmt.Println("Host:", t.host)
-	fmt.Println("Path:", t.path)
-	fmt.Println("Proto:", t.proto)
-	fmt.Println("Port:", t.port)
-	fmt.Println("Sleep Time:", t.sleep)
-
-	wg.Add(len(servers))
-	for _, i := range servers{
-		if t.proto == "https://"{
-			go MakeHTTPSRequest(i, t)
+	wg.Add(len(servers) + 1)
+	for index, i := range servers{
+		TRACKINGLIST = append(TRACKINGLIST, tracking{0,0,0,0,0,0,i})
+		if TDATA.Proto == "https://"{
+			go MakeHTTPSRequest(i, index)
 		}else {
-			go MakeHTTPRequest(i, t)
+			go MakeHTTPRequest(i, index)
 		}
 	}
-
+	// Update the terminal
+	go update()
 	wg.Wait()
 }
