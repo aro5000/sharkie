@@ -4,13 +4,10 @@ package main
 
 import (
 	"net/http"
-//	"log"
-//	"fmt"
 	"time"
 	"net"
 	"strings"
 	"context"
-//	"io/ioutil"
 )
 
 
@@ -25,6 +22,7 @@ func MakeHTTPSRequest(server string, index int){
 
 	for {
 		req, _ := http.NewRequest("GET", TDATA.Url, nil)
+		req.Header.Set("User-Agent", "sharkie")
 
 		client := &http.Client{
 			CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -47,20 +45,10 @@ func MakeHTTPSRequest(server string, index int){
 		}
 		resp, err := client.Do(req)
 		if err != nil {
-			//log.Fatal(err)
 			evaluate(0, index)
 		} else{
 			evaluate(resp.StatusCode, index)
 		}
-//		if resp.StatusCode == http.StatusOK{
-//			body, err := ioutil.ReadAll(resp.Body)
-//			if err != nil {
-//				log.Fatal(err)
-//			}
-//			fmt.Println(server + " | " + fmt.Sprint(resp.StatusCode) + " | " + string(body))
-//		}else{
-//			fmt.Println(server + " |", resp.StatusCode)
-//		}
 		time.Sleep((time.Duration(TDATA.Sleep * 1000)) * time.Millisecond)
 	}
 }
@@ -69,6 +57,7 @@ func MakeHTTPSRequest(server string, index int){
 func MakeHTTPRequest(server string, index int) {
 	for {
 		req, _ := http.NewRequest("GET", TDATA.Proto + server + TDATA.Path, nil)
+		req.Header.Set("User-Agent", "sharkie")
 		req.Host = TDATA.Host
 		client := &http.Client{
 			CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -78,10 +67,8 @@ func MakeHTTPRequest(server string, index int) {
 		}
 		resp, err := client.Do(req)
 		if err != nil {
-			//log.Fatal(err)
 			evaluate(0, index)
 		} else{
-			//fmt.Println(server + " |", resp.StatusCode)
 			evaluate(resp.StatusCode, index)
 		}
 
@@ -100,7 +87,7 @@ func evaluate(response_code int, index int){
 		TRACKINGLIST[index].Fourhundreds += 1
 	case (500 <= response_code && response_code <= 599):
 		TRACKINGLIST[index].Fivehundreds += 1
-	case response_code == 0:
+	default:
 		TRACKINGLIST[index].Failed += 1
 	}
 	TRACKINGLIST[index].Total += 1

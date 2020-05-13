@@ -7,22 +7,22 @@ import (
 	"sync"
 )
 
-type Servers []string
+type servers []string
 
-func (x *Servers) Set(value string) error {
+func (x *servers) Set(value string) error {
 	*x = append(*x, value)
 	return nil
 }
 
-func (x *Servers) String() string {
+func (x *servers) String() string {
 	return fmt.Sprint(*x)
 }
 
-var servers Servers
+var s servers
 var wg sync.WaitGroup
 
 func main () {
-	flag.Var(&servers, "s", "Server IP or hostname")
+	flag.Var(&s, "s", "Server IP or hostname")
 	flag.StringVar(&TDATA.Url, "u", "", "URL to target")
 	flag.Float64Var(&TDATA.Sleep, "sleep", 1, "Time in seconds to sleep between requests")
 	flag.Parse()
@@ -65,8 +65,8 @@ func main () {
 		}
 	}
 
-	wg.Add(len(servers) + 1)
-	for index, i := range servers{
+	wg.Add(len(s) + 1)
+	for index, i := range s{
 		TRACKINGLIST = append(TRACKINGLIST, tracking{0,0,0,0,0,0,i})
 		if TDATA.Proto == "https://"{
 			go MakeHTTPSRequest(i, index)
