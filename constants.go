@@ -1,12 +1,14 @@
 package main
 
 type targetdata struct {
-	Url   string
-	Host  string
-	Path  string
-	Proto string
-	Port  string
-	Sleep float64
+	Url            string
+	Host           string
+	Path           string
+	Proto          string
+	Port           string
+	Expected       int
+	DisplaySuccess bool
+	Sleep          float64
 }
 
 var TDATA targetdata

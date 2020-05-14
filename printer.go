@@ -32,11 +32,27 @@ func update()  {
 		// minwidth, tabwidth, padding, padchar, flags
 		w.Init(os.Stdout, 8, 8, 0, '\t', 0)
 	
-		fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total")
-		fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "------", "----", "----", "----", "----", "------", "-----")
-	
-		for _, i := range TRACKINGLIST {
- 	       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total)
+		// Check if we should display success rates depending on the expected value:
+		if TDATA.DisplaySuccess{
+			fmt.Println("Expected Response:", TDATA.Expected)
+			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total", "Success %")
+			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t", "------", "----", "----", "----", "----", "------", "-----", "---------")
+			for _, i := range TRACKINGLIST {
+				var percent float64
+				switch TDATA.Expected {
+				case 200: percent = float64(i.Twohundreds) / float64(i.Total) * float64(100)
+				case 300: percent = float64(i.Threehundreds) / float64(i.Total) * float64(100)
+				case 400: percent = float64(i.Fourhundreds) / float64(i.Total) * float64(100)
+				case 500: percent = float64(i.Fivehundreds) / float64(i.Total) * float64(100)
+				}
+ 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, percent)
+			}
+		} else {
+			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total")
+			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "------", "----", "----", "----", "----", "------", "-----")
+			for _, i := range TRACKINGLIST {
+ 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total)
+			}
 		}
 		w.Flush()
 		fmt.Println("\n\n")
