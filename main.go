@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"flag"
 	"strings"
-	"strconv"
 	"sync"
 	"os"
 )
@@ -28,16 +27,6 @@ func compare(x []int, e int) bool{
 	}
 	return false
 	}
-
-// Set up emoji's
-func setemoji() map[string]string {
-	shark, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F988", "\\U"), 16, 32)
-	thumbup, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F44D", "\\U"), 16, 32)
-	thumbdown, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F44E", "\\U"), 16, 32)
-	sad, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F629", "\\U"), 16, 32)
-	emoji := map[string]string {"shark":string(shark), "thumbup":string(thumbup), "thumbdown":string(thumbdown), "sad":string(sad)}
-	return emoji
-}
 
 var EMOJI map[string]string
 var s servers

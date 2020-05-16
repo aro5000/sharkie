@@ -44,8 +44,10 @@ func update()  {
 				var emoji string
 				switch {
 				case (percent == 100): emoji = EMOJI["thumbup"]
-				case (50.0 <= percent && percent <= 100.0): emoji = EMOJI["thumbdown"] 
-				case (percent < 50): emoji = EMOJI["sad"]
+				case (80.0 <= percent && percent < 100.0): emoji = EMOJI["eyebrow"] 
+				case (60.0 <= percent && percent < 80.0): emoji = EMOJI["neutral"] 
+				case (20.0 <= percent && percent < 60.0): emoji = EMOJI["sad"] 
+				case (percent < 20): emoji = EMOJI["thumbdown"]
 				default: emoji = ""
 				}
  		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t%s\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, percent, emoji)
