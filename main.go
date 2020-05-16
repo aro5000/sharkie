@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"flag"
 	"strings"
+	"strconv"
 	"sync"
 	"os"
 )
@@ -28,15 +29,34 @@ func compare(x []int, e int) bool{
 	return false
 	}
 
+// Set up emoji's
+func setemoji() map[string]string {
+	shark, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F988", "\\U"), 16, 32)
+	thumbup, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F44D", "\\U"), 16, 32)
+	thumbdown, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F44E", "\\U"), 16, 32)
+	sad, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F629", "\\U"), 16, 32)
+	emoji := map[string]string {"shark":string(shark), "thumbup":string(thumbup), "thumbdown":string(thumbdown), "sad":string(sad)}
+	return emoji
+}
+
+var EMOJI map[string]string
 var s servers
 var wg sync.WaitGroup
 
 func main () {
-	flag.Var(&s, "s", "Server IP or hostname")
+	flag.Usage = func(){
+		fmt.Println("Welcome to Sharkie! A CLI tool for tracking HTTP response codes.\nExample:\nsharkie -u example.com")
+		fmt.Println("\n\nUse the -s flag to target multiple servers behind a load balancer with the same HTTP Host header:\nsharkie -u example.com -s 1.2.3.4 -s 3.4.5.6")
+		fmt.Println("\n\nTrack success rate based on expected status code:\nsharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200\n")
+		flag.PrintDefaults()
+	}
+	flag.Var(&s, "s", "Server IP or hostname (127.0.0.1, example.com")
 	flag.StringVar(&TDATA.Url, "u", "", "URL to target")
 	flag.Float64Var(&TDATA.Sleep, "sleep", 1, "Time in seconds to sleep between requests")
 	flag.IntVar(&TDATA.Expected, "e", 0, "Expected HTTP status code to generate success percentages. For example:\n-e 200 (200-299)\n-e 300 (300-399) etc.\nValid values are: 200, 300, 400, 500")
+	flag.BoolVar(&TDATA.SkipTLS, "k", false, "Ignore invalid certificates for TLS connections. (Default is false)\nUsage: -k=true")
 	flag.Parse()
+	EMOJI = setemoji()
 
 	// Check if there is a url defined, otherwise print the usage
 	if TDATA.Url == "" {

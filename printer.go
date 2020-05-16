@@ -6,8 +6,6 @@ import(
 	"os/exec"
 	"text/tabwriter"
 	"time"
-	"strconv"
-	"strings"
 )
 
 func update()  {
@@ -16,10 +14,7 @@ func update()  {
         cmd.Stdout = os.Stdout
 		cmd.Run()
 
-		// Get a shark emoji :)
-		emoji, _ := strconv.ParseInt(strings.TrimPrefix("\\U1F988", "\\U"), 16, 32)
-
-		fmt.Printf("===========\nSHARKIE  %s\n===========\n", string(emoji))
+		fmt.Printf("===========\nSHARKIE  %s\n===========\n", EMOJI["shark"])
 		fmt.Println("URL:", TDATA.Url)
 		fmt.Println("Host:", TDATA.Host)
 		fmt.Println("Path:", TDATA.Path)
@@ -45,7 +40,15 @@ func update()  {
 				case 400: percent = float64(i.Fourhundreds) / float64(i.Total) * float64(100)
 				case 500: percent = float64(i.Fivehundreds) / float64(i.Total) * float64(100)
 				}
- 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, percent)
+				// Figure out which emoji to use
+				var emoji string
+				switch {
+				case (percent == 100): emoji = EMOJI["thumbup"]
+				case (50.0 <= percent && percent <= 100.0): emoji = EMOJI["thumbdown"] 
+				case (percent < 50): emoji = EMOJI["sad"]
+				default: emoji = ""
+				}
+ 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t%s\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, percent, emoji)
 			}
 		} else {
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total")

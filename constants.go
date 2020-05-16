@@ -8,6 +8,7 @@ type targetdata struct {
 	Port           string
 	Expected       int
 	DisplaySuccess bool
+	SkipTLS        bool
 	Sleep          float64
 }
 
