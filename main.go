@@ -44,6 +44,7 @@ func main () {
 	flag.Float64Var(&TDATA.Sleep, "sleep", 1, "Time in seconds to sleep between requests")
 	flag.IntVar(&TDATA.Expected, "e", 0, "Expected HTTP status code to generate success percentages. For example:\n-e 200 (200-299)\n-e 300 (300-399) etc.\nValid values are: 200, 300, 400, 500")
 	flag.BoolVar(&TDATA.SkipTLS, "k", false, "Ignore invalid certificates for TLS connections. (Default is false)\nUsage: -k=true")
+	flag.BoolVar(&TDATA.Emoji, "emoji", true, "Control whether emoji's display or not.\nUsage (to turn off): -emoji=false")
 	flag.Parse()
 	EMOJI = setemoji()
 
