@@ -82,7 +82,7 @@ sharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200
 
 # Build
 ## From Source:
-Make sure you have installed golang installed [https://golang.org/dl/](https://golang.org/dl/)
+Make sure you have installed golang [https://golang.org/dl/](https://golang.org/dl/)
 ```
 go build
 
