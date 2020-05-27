@@ -39,7 +39,7 @@ func main () {
 		fmt.Println("\n\nTrack success rate based on expected status code:\nsharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200\n")
 		flag.PrintDefaults()
 	}
-	flag.Var(&s, "s", "Server IP or hostname (127.0.0.1, example.com")
+	flag.Var(&s, "s", "Server IP or hostname (127.0.0.1, example.com)")
 	flag.StringVar(&TDATA.Url, "u", "", "URL to target")
 	flag.Float64Var(&TDATA.Sleep, "sleep", 1, "Time in seconds to sleep between requests")
 	flag.IntVar(&TDATA.Expected, "e", 0, "Expected HTTP status code to generate success percentages. For example:\n-e 200 (200-299)\n-e 300 (300-399) etc.\nValid values are: 200, 300, 400, 500")

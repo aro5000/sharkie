@@ -1,6 +1,11 @@
 # SHARKIE
 Sharkie is a CLI tool to track HTTP response codes from servers behind load balancers.
 
+The quickest way to get started is by using the pre-built docker container:
+```
+docker run -it --rm registry.gitlab.com/aro5000/sharkie:latest -u http://example.com
+```
+
 ![Example image](./EXAMPLE.png)
 
 # Use Cases
@@ -73,7 +78,7 @@ sharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200
   -k    Ignore invalid certificates for TLS connections. (Default is false)
         Usage: -k=true
   -s value
-        Server IP or hostname (127.0.0.1, example.com
+        Server IP or hostname (127.0.0.1, example.com)
   -sleep float
         Time in seconds to sleep between requests (default 1)
   -u string
