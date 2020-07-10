@@ -15,6 +15,8 @@ type targetdata struct {
 	SkipTLS        bool
 	Emoji          bool
 	Sleep          float64
+	Ui             bool
+	Status         string
 }
 
 var TDATA targetdata
@@ -27,6 +29,8 @@ type tracking struct {
 	Failed          int
 	Total           int
 	Server          string
+	Percent			float64
+	Emoji           string
 }
 
 var TRACKINGLIST []tracking
@@ -47,6 +51,13 @@ func setemoji() map[string]string {
 									"sad":string(sad),
 									"eyebrow":string(eyebrow),
 									"neutral":string(neutral)}
+	} else if TDATA.Ui {
+		emoji = map[string]string {"shark":"🦈", 
+									"thumbup":"👍", 
+									"thumbdown":"👎", 
+									"sad":"😩",
+									"eyebrow":"🤨",
+									"neutral":"😐"}
 	} else {
 		// If emojis are disabled, we will return a map with empty strings
 		emoji = map[string]string {"shark":"", 

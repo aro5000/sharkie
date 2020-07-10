@@ -9,10 +9,11 @@ import (
 	"strings"
 	"context"
 	"crypto/tls"
+	"sync"
 )
 
 
-func MakeHTTPSRequest(server string, index int){
+func MakeHTTPSRequest(server string, index int, wg *sync.WaitGroup){
 	for {
 		req, _ := http.NewRequest("GET", TDATA.Url, nil)
 		req.Header.Set("User-Agent", "sharkie")
@@ -24,12 +25,19 @@ func MakeHTTPSRequest(server string, index int){
 		} else{
 			evaluate(resp.StatusCode, index)
 		}
+
+		setStatus(index)
 		time.Sleep((time.Duration(TDATA.Sleep * 1000)) * time.Millisecond)
+
+		if TDATA.Status == "STOP" {
+			break
+		}
 	}
+	wg.Done()
 }
 
 
-func MakeHTTPRequest(server string, index int) {
+func MakeHTTPRequest(server string, index int, wg *sync.WaitGroup) {
 	for {
 		req, _ := http.NewRequest("GET", TDATA.Proto + server + TDATA.Path, nil)
 		req.Header.Set("User-Agent", "sharkie")
@@ -47,8 +55,14 @@ func MakeHTTPRequest(server string, index int) {
 			evaluate(resp.StatusCode, index)
 		}
 
+		setStatus(index)
 		time.Sleep((time.Duration(TDATA.Sleep * 1000)) * time.Millisecond)
+
+		if TDATA.Status == "STOP" {
+			break
+		}
 	}
+	wg.Done()
 }
 
 
@@ -66,6 +80,32 @@ func evaluate(response_code int, index int){
 		TRACKINGLIST[index].Failed += 1
 	}
 	TRACKINGLIST[index].Total += 1
+}
+
+func setStatus(index int){
+	var percent float64
+	switch TDATA.Expected {
+	case 200: percent = float64(TRACKINGLIST[index].Twohundreds) / float64(TRACKINGLIST[index].Total) * float64(100)
+	case 300: percent = float64(TRACKINGLIST[index].Threehundreds) / float64(TRACKINGLIST[index].Total) * float64(100)
+	case 400: percent = float64(TRACKINGLIST[index].Fourhundreds) / float64(TRACKINGLIST[index].Total) * float64(100)
+	case 500: percent = float64(TRACKINGLIST[index].Fivehundreds) / float64(TRACKINGLIST[index].Total) * float64(100)
+	}
+	// Figure out which emoji to use
+	var emoji string
+	if TDATA.Expected != 0{
+		switch {
+		case (percent == 100): emoji = EMOJI["thumbup"]
+		case (80.0 <= percent && percent < 100.0): emoji = EMOJI["eyebrow"] 
+		case (60.0 <= percent && percent < 80.0): emoji = EMOJI["neutral"] 
+		case (20.0 <= percent && percent < 60.0): emoji = EMOJI["sad"] 
+		case (percent < 20): emoji = EMOJI["thumbdown"]
+		default: emoji = ""
+		}
+	} else {
+		emoji = ""
+	}
+	TRACKINGLIST[index].Percent = percent
+	TRACKINGLIST[index].Emoji = emoji
 }
 
 
