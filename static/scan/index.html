@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SHARKIE 🦈</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap-4.5.0-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/custom.css" rel="stylesheet">
+  </head>
+  <body class="py-4">
+    <div class="container">
+
+      <h1>SHARKIE 🦈</h1>
+      <p class="lead">Sharkie is a tool to track HTTP response codes from servers behind load balancers.</p>
+
+      <h2>Info:</h2>
+      <div class="row mb-3">
+        <div class="col-sm-9">
+            <textarea class="form-control" id="servers-input" rows="7" readonly>
+Host: {{ .TD.Host }}
+Path: {{ .TD.Path }}
+Proto: {{ .TD.Proto }}
+Port: {{ .TD.Port }}
+Sleep Time: {{ .TD.Sleep }}
+            </textarea>
+        </div>
+        <div class="col-sm-3">
+          <div class="row">
+            <div class="col">
+              URL:<br>
+              <input type="text" class="form-control" id="url-input" placeholder="{{ .TD.Url }}" readonly>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <!--<label for="status-input">Expected Status Code:</label> -->
+              <br>Expected Status Code:<br>
+              <input class="form-control" type="text" placeholder="{{ .TD.Expected }}" readonly>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <br>
+              <button type="submit" class="btn btn-primary mb-2 btn-block" onclick="restart()">Start Over</button>
+            </div>
+          </div>
+        </div>  
+      </div>
+
+      <h2 class="mt-4">Results:</h2>
+      <div class="row mb-3">
+        <div class="col-sm-3"><b>Server</b></div>
+        <div class="col"><b>200-299</b></div>
+        <div class="col"><b>300-399</b></div>
+        <div class="col"><b>400-499</b></div>
+        <div class="col"><b>500-599</b></div>
+        <div class="col"><b>Failed</b></div>
+        <div class="col"><b>Total</b></div>
+        <div class="col"><b>Success %</b></div>
+        <div class="col"><b>Status</b></div>
+      </div>
+    {{ range .TL }}
+      <div class="row mb-3">
+        <div class="col-sm-3 themed-grid-col trimText">{{ .Server }}</div>
+        <div class="col themed-grid-col">{{ .Twohundreds }}</div>
+        <div class="col themed-grid-col">{{ .Threehundreds }}</div>
+        <div class="col themed-grid-col">{{ .Fourhundreds }}</div>
+        <div class="col themed-grid-col">{{ .Fivehundreds }}</div>
+        <div class="col themed-grid-col">{{ .Failed }}</div>
+        <div class="col themed-grid-col">{{ .Total }}</div>
+        <div class="col themed-grid-col">{{ printf "%.2f" .Percent }}</div>
+        <div class="col themed-grid-col">{{ .Emoji }}</div>
+      </div>
+    {{ end }}
+    </div>
+  </body>
+</html>
+
+<script>
+    setInterval('reloadPage()', 1000);
+
+    function reloadPage() {
+      window.location.reload();
+    }
+
+    async function restart() {
+      var req = new Request(location.origin + "/stop")
+
+      await fetch(req).then(function(response){
+        console.log(response.status);
+      })
+      .catch(error => {
+          console.log('request failed', error);
+          alert("Unable to reach the server. Make sure SHARKIE is running.")
+          throw error;
+        });
+
+      window.location.href = location.origin;
+    }
+</script>

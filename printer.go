@@ -33,24 +33,7 @@ func update()  {
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total", "Success %")
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t", "------", "----", "----", "----", "----", "------", "-----", "---------")
 			for _, i := range TRACKINGLIST {
-				var percent float64
-				switch TDATA.Expected {
-				case 200: percent = float64(i.Twohundreds) / float64(i.Total) * float64(100)
-				case 300: percent = float64(i.Threehundreds) / float64(i.Total) * float64(100)
-				case 400: percent = float64(i.Fourhundreds) / float64(i.Total) * float64(100)
-				case 500: percent = float64(i.Fivehundreds) / float64(i.Total) * float64(100)
-				}
-				// Figure out which emoji to use
-				var emoji string
-				switch {
-				case (percent == 100): emoji = EMOJI["thumbup"]
-				case (80.0 <= percent && percent < 100.0): emoji = EMOJI["eyebrow"] 
-				case (60.0 <= percent && percent < 80.0): emoji = EMOJI["neutral"] 
-				case (20.0 <= percent && percent < 60.0): emoji = EMOJI["sad"] 
-				case (percent < 20): emoji = EMOJI["thumbdown"]
-				default: emoji = ""
-				}
- 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t%s\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, percent, emoji)
+ 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t%s\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, i.Percent, i.Emoji)
 			}
 		} else {
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total")
