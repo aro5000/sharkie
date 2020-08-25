@@ -25,7 +25,7 @@ func update()  {
 		// Loop through TRACKINGLIST and print all the current values
 		w := new(tabwriter.Writer)
 		// minwidth, tabwidth, padding, padchar, flags
-		w.Init(os.Stdout, 8, 8, 0, '\t', 0)
+		w.Init(os.Stdout, 8, 8, 1, '\t', 0)
 	
 		// Check if we should display success rates depending on the expected value:
 		if TDATA.DisplaySuccess{
