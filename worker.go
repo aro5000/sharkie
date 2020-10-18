@@ -21,7 +21,7 @@ func compare(x []int, e int) bool{
 
 
 func worker(s []string){
-	// Set status as RUNNING
+	// Set status as RUNNING, this variable is used to stop the loop of requests being made.
 	TDATA.Status = "RUNNING"
 	// Check if there is a url defined, otherwise print the usage
 	if TDATA.Url == "" {
@@ -89,6 +89,13 @@ func worker(s []string){
 			s = append(s, urlstr[0] + ":" + urlstr[1])
 		} else {
 			s = append(s, TDATA.Host)
+		}
+	} else{
+		// If the port is not 80 or 443, we should attach the globally set port to the server name for the appropriate requests to be sent.
+		if TDATA.Port != "80" && TDATA.Port != "443" {
+			for index, i := range s{
+				s[index] = i + ":" + TDATA.Port
+			}
 		}
 	}
 
