@@ -1,8 +1,10 @@
-FROM golang:alpine as build
+FROM golang:1.15-alpine as build
 WORKDIR /app
 ADD *go* ./
 ENV GOPATH /go
-RUN go build -o sharkie 
+ENV CGO_ENABLED=0
+RUN go test
+RUN go build -o sharkie
 
 FROM alpine:latest
 COPY --from=build /app/sharkie /app/

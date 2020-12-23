@@ -43,7 +43,7 @@ func update()  {
 			}
 		}
 		w.Flush()
-		fmt.Println("\n\n")
+		fmt.Println("\n\n ")
 		time.Sleep((time.Duration(500)) * time.Millisecond)
 	}
 }
