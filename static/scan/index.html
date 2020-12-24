@@ -10,6 +10,10 @@
 
     <!-- Custom styles for this template -->
     <link href="/custom.css" rel="stylesheet">
+
+    <!-- JQuery CDN-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
   </head>
   <body class="py-4">
     <div class="container">
@@ -48,7 +52,7 @@ Sleep Time: {{ .TD.Sleep }}
               <button type="submit" class="btn btn-primary mb-2 btn-block" onclick="restart()">Start Over</button>
             </div>
           </div>
-        </div>  
+        </div>
       </div>
 
       <h2 class="mt-4">Results:</h2>
@@ -63,19 +67,19 @@ Sleep Time: {{ .TD.Sleep }}
         <div class="col"><b>Success %</b></div>
         <div class="col"><b>Status</b></div>
       </div>
-    {{ range .TL }}
-      <div class="row mb-3">
-        <div class="col-sm-3 themed-grid-col trimText">{{ .Server }}</div>
-        <div class="col themed-grid-col">{{ .Twohundreds }}</div>
-        <div class="col themed-grid-col">{{ .Threehundreds }}</div>
-        <div class="col themed-grid-col">{{ .Fourhundreds }}</div>
-        <div class="col themed-grid-col">{{ .Fivehundreds }}</div>
-        <div class="col themed-grid-col">{{ .Failed }}</div>
-        <div class="col themed-grid-col">{{ .Total }}</div>
-        <div class="col themed-grid-col">{{ printf "%.2f" .Percent }}</div>
-        <div class="col themed-grid-col">{{ .Emoji }}</div>
+      <div id="scantable">
+        <div class="row mb-3">
+          <div class="col-sm-3 themed-grid-col trimText"></div>
+          <div class="col themed-grid-col"></div>
+          <div class="col themed-grid-col"></div>
+          <div class="col themed-grid-col"></div>
+          <div class="col themed-grid-col"></div>
+          <div class="col themed-grid-col"></div>
+          <div class="col themed-grid-col"></div>
+          <div class="col themed-grid-col"></div>
+          <div class="col themed-grid-col"></div>
+        </div>
       </div>
-    {{ end }}
     </div>
   </body>
 </html>
@@ -84,7 +88,13 @@ Sleep Time: {{ .TD.Sleep }}
     setInterval('reloadPage()', 1000);
 
     function reloadPage() {
-      window.location.reload();
+      $.ajax({
+        url: "scantable",
+        success: function(data){
+          var result = $('<div />').append(data).find('#scantable').html();
+          $('#scantable').html(result);
+        }
+      });
     }
 
     async function restart() {
