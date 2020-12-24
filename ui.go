@@ -9,7 +9,7 @@ import (
 )
 
 
-func serveBaseTemplate(w http.ResponseWriter, r *http.Request) {
+func serveTemplate(w http.ResponseWriter, r *http.Request) {
 
 	type templatedata struct {
 		TD            targetdata
@@ -18,29 +18,17 @@ func serveBaseTemplate(w http.ResponseWriter, r *http.Request) {
 
 	td := templatedata{TDATA, TRACKINGLIST}
 
-	t, err := template.ParseFiles("./static/scan/index.html")
+	t, err := template.ParseFiles("")
+	if r.URL.Path == "/scan" {
+		t, err = template.ParseFiles("./static/scan/index.html")
+	} else if r.URL.Path == "/scantable" {
+		t, err = template.ParseFiles("./static/scantable/index.html")
+	}
 	if err != nil {
 		fmt.Println(err)
 	}
 	t.Execute(w, td)
 }
-
-func serveScanTemplate(w http.ResponseWriter, r *http.Request) {
-
-	type templatedata struct {
-		TD            targetdata
-		TL            []tracking
-	}
-
-	td := templatedata{TDATA, TRACKINGLIST}
-
-	t, err := template.ParseFiles("./static/scantable/index.html")
-	if err != nil {
-		fmt.Println(err)
-	}
-	t.Execute(w, td)
-}
-
 
 func scanInfo(w http.ResponseWriter, r *http.Request) {
 	type Payload struct {
@@ -72,8 +60,8 @@ func ui(){
 		port = os.Getenv("SHARKIE_PORT")
 	}
 	http.Handle("/", http.FileServer(http.Dir("./static")))
-	http.HandleFunc("/scan", serveBaseTemplate)
-	http.HandleFunc("/scantable", serveScanTemplate)
+	http.HandleFunc("/scan", serveTemplate)
+	http.HandleFunc("/scantable", serveTemplate)
 	http.HandleFunc("/data", scanInfo)
 	http.HandleFunc("/stop", stop)
 	fmt.Println("Server is starting at " + port + "...")
