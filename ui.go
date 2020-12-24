@@ -9,16 +9,32 @@ import (
 )
 
 
-func serveTemplate(w http.ResponseWriter, r *http.Request) {
+func serveBaseTemplate(w http.ResponseWriter, r *http.Request) {
 
 	type templatedata struct {
 		TD            targetdata
-		TL            []tracking	
+		TL            []tracking
 	}
 
 	td := templatedata{TDATA, TRACKINGLIST}
 
 	t, err := template.ParseFiles("./static/scan/index.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	t.Execute(w, td)
+}
+
+func serveScanTemplate(w http.ResponseWriter, r *http.Request) {
+
+	type templatedata struct {
+		TD            targetdata
+		TL            []tracking
+	}
+
+	td := templatedata{TDATA, TRACKINGLIST}
+
+	t, err := template.ParseFiles("./static/scantable/index.html")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -56,7 +72,8 @@ func ui(){
 		port = os.Getenv("SHARKIE_PORT")
 	}
 	http.Handle("/", http.FileServer(http.Dir("./static")))
-	http.HandleFunc("/scan", serveTemplate)
+	http.HandleFunc("/scan", serveBaseTemplate)
+	http.HandleFunc("/scantable", serveScanTemplate)
 	http.HandleFunc("/data", scanInfo)
 	http.HandleFunc("/stop", stop)
 	fmt.Println("Server is starting at " + port + "...")
