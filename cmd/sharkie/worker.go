@@ -1,24 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
+	"os"
 	"strings"
 	"sync"
-	"os"
 )
 
 var wg sync.WaitGroup
 
-func compare(x []int, e int) bool{
-	for _, i := range(x){
+func compare(x []int, e int) bool {
+	for _, i := range x {
 		if i == e {
 			return true
 		}
 	}
 	return false
-	}
-
+}
 
 func parse(s []string) []string {
 
@@ -38,7 +37,7 @@ func parse(s []string) []string {
 	// reconstruct full path
 	if len(urlstr) > 1 {
 		TDATA.Path = ""
-		for i := 1; i < len(urlstr); i++{
+		for i := 1; i < len(urlstr); i++ {
 			TDATA.Path += "/" + urlstr[i]
 		}
 	} else {
@@ -53,7 +52,7 @@ func parse(s []string) []string {
 	if len(urlstr) > 1 {
 		TDATA.Port = urlstr[1]
 	} else {
-		if TDATA.Proto == "https://"{
+		if TDATA.Proto == "https://" {
 			TDATA.Port = "443"
 		} else {
 			TDATA.Port = "80"
@@ -63,15 +62,15 @@ func parse(s []string) []string {
 	// If no servers were specified, just set the host as the server target
 	if len(s) < 1 {
 		// if urlstr is greater than 1, there is a port defined, and we'll use that as the server. Otherwise, just use the Host that we already parsed out.
-		if len(urlstr) > 1{
-			s = append(s, urlstr[0] + ":" + urlstr[1])
+		if len(urlstr) > 1 {
+			s = append(s, urlstr[0]+":"+urlstr[1])
 		} else {
 			s = append(s, TDATA.Host)
 		}
-	} else{
+	} else {
 		// If the port is not 80 or 443, we should attach the globally set port to the server name for the appropriate requests to be sent.
 		if TDATA.Port != "80" && TDATA.Port != "443" {
-			for index, i := range s{
+			for index, i := range s {
 				s[index] = i + ":" + TDATA.Port
 			}
 		}
@@ -79,8 +78,7 @@ func parse(s []string) []string {
 	return s
 }
 
-
-func worker(s []string){
+func worker(s []string) {
 	// Set status as RUNNING, this variable is used to stop the loop of requests being made.
 	TDATA.Status = "RUNNING"
 	// Check if there is a url defined, otherwise print the usage
@@ -93,11 +91,11 @@ func worker(s []string){
 	if TDATA.Expected == 0 {
 		TDATA.DisplaySuccess = false
 	} else {
-		expectedValues := []int{200,300,400,500}
+		expectedValues := []int{200, 300, 400, 500}
 		display := compare(expectedValues, TDATA.Expected)
-		if display{
+		if display {
 			TDATA.DisplaySuccess = true
-		} else{
+		} else {
 			fmt.Println("[!] Invalid value with the '-e' flag!")
 			flag.Usage()
 			os.Exit(1)
@@ -108,16 +106,16 @@ func worker(s []string){
 
 	wg.Add(len(s))
 
-	for index, i := range s{
-		TRACKINGLIST = append(TRACKINGLIST, tracking{0,0,0,0,0,0,i,0.0,""})
-		if TDATA.Proto == "https://"{
+	for index, i := range s {
+		TRACKINGLIST = append(TRACKINGLIST, tracking{0, 0, 0, 0, 0, 0, i, 0.0, ""})
+		if TDATA.Proto == "https://" {
 			go MakeHTTPSRequest(i, index, &wg)
-		}else {
+		} else {
 			go MakeHTTPRequest(i, index, &wg)
 		}
 	}
 	// Update the terminal if it is not in UI mode
-	if !TDATA.Ui{
+	if !TDATA.Ui {
 		go update()
 	}
 	wg.Wait()
@@ -126,7 +124,7 @@ func worker(s []string){
 	cleanup()
 }
 
-func cleanup () {
+func cleanup() {
 	TRACKINGLIST = nil
 	TDATA.Url = ""
 	TDATA.Expected = 0
