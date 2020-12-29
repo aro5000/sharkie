@@ -1,10 +1,10 @@
 FROM golang:1.15-alpine as build
 WORKDIR /app
-ADD *go* ./
+ADD cmd/ ./cmd
 ENV GOPATH /go
 ENV CGO_ENABLED=0
-RUN go test
-RUN go build -o sharkie
+RUN go test ./cmd/sharkie
+RUN go build ./cmd/sharkie
 
 FROM alpine:latest
 COPY --from=build /app/sharkie /app/

@@ -9,8 +9,8 @@ docker run -it --rm registry.gitlab.com/aro5000/sharkie:latest -u http://example
 docker run -it --rm -p 5000:5000 registry.gitlab.com/aro5000/sharkie:latest -ui=true
 ```
 
-![Example image](./EXAMPLE.png)
-![Example UI](./UI.png)
+![Example image](./docs/EXAMPLE.png)
+![Example UI](./docs/UI.png)
 
 # Use Cases
 This is not an exhaustive list, but some common scenarios where this tool could be helpful.
@@ -95,11 +95,17 @@ sharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200
 ## From Source:
 Make sure you have installed golang [https://golang.org/dl/](https://golang.org/dl/)
 ```
-go build
+go build ./cmd/sharkie
 
 # You can move the resulting binary anywhere in your path
 # For example:
 mv ./sharkie ~/.local/bin
+```
+
+## go get
+```
+# This will only work if you have golang installed on your machine
+go get gitlab.com/aro5000/sharkie
 ```
 
 ## Docker:
