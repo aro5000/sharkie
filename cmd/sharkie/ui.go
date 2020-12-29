@@ -1,19 +1,18 @@
 package main
 
 import (
-	"net/http"
+	"encoding/json"
 	"fmt"
 	"html/template"
-	"encoding/json"
+	"net/http"
 	"os"
 )
-
 
 func serveTemplate(w http.ResponseWriter, r *http.Request) {
 
 	type templatedata struct {
-		TD            targetdata
-		TL            []tracking
+		TD targetdata
+		TL []tracking
 	}
 
 	td := templatedata{TDATA, TRACKINGLIST}
@@ -32,13 +31,13 @@ func serveTemplate(w http.ResponseWriter, r *http.Request) {
 
 func scanInfo(w http.ResponseWriter, r *http.Request) {
 	type Payload struct {
-		Servers     []string `json:"servers,omitempty"`
-		Url         string   `json:"url"`
-		Expected    int      `json:"expected"`
+		Servers  []string `json:"servers,omitempty"`
+		Url      string   `json:"url"`
+		Expected int      `json:"expected"`
 	}
 	var m Payload
 	err := json.NewDecoder(r.Body).Decode(&m)
-	if err!=nil{
+	if err != nil {
 		http.Error(w, "Message incorrectly formatted, or blank", http.StatusBadRequest)
 		fmt.Println(err)
 		return
@@ -54,7 +53,7 @@ func stop(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func ui(){
+func ui() {
 	port := "localhost:5000"
 	if os.Getenv("SHARKIE_PORT") != "" {
 		port = os.Getenv("SHARKIE_PORT")
@@ -65,5 +64,5 @@ func ui(){
 	http.HandleFunc("/data", scanInfo)
 	http.HandleFunc("/stop", stop)
 	fmt.Println("Server is starting at " + port + "...")
-    http.ListenAndServe(port, nil)
+	http.ListenAndServe(port, nil)
 }

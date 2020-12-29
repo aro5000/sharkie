@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 )
 
 type servers []string
@@ -19,8 +19,8 @@ func (x *servers) String() string {
 var EMOJI map[string]string
 var s servers
 
-func main () {
-	flag.Usage = func(){
+func main() {
+	flag.Usage = func() {
 		fmt.Println("Welcome to Sharkie! A CLI tool for tracking HTTP response codes.\nExample:\nsharkie -u example.com")
 		fmt.Println("\n\nUse the -s flag to target multiple servers behind a load balancer with the same HTTP Host header:\nsharkie -u example.com -s 1.2.3.4 -s 3.4.5.6")
 		fmt.Println("\n\nTrack success rate based on expected status code:\nsharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200\n ")
@@ -36,9 +36,9 @@ func main () {
 	flag.Parse()
 	EMOJI = setemoji()
 
-	if !TDATA.Ui{
+	if !TDATA.Ui {
 		worker(s)
-	} else{
+	} else {
 		ui()
 	}
 }

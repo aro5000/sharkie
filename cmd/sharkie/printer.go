@@ -1,6 +1,6 @@
 package main
 
-import(
+import (
 	"fmt"
 	"os"
 	"os/exec"
@@ -8,10 +8,10 @@ import(
 	"time"
 )
 
-func update()  {
+func update() {
 	for {
-		cmd := exec.Command("clear") 
-        cmd.Stdout = os.Stdout
+		cmd := exec.Command("clear")
+		cmd.Stdout = os.Stdout
 		cmd.Run()
 
 		fmt.Printf("===========\nSHARKIE  %s\n===========\n", EMOJI["shark"])
@@ -26,20 +26,20 @@ func update()  {
 		w := new(tabwriter.Writer)
 		// minwidth, tabwidth, padding, padchar, flags
 		w.Init(os.Stdout, 8, 8, 1, '\t', 0)
-	
+
 		// Check if we should display success rates depending on the expected value:
-		if TDATA.DisplaySuccess{
+		if TDATA.DisplaySuccess {
 			fmt.Println("Expected Response:", TDATA.Expected)
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total", "Success %")
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t", "------", "----", "----", "----", "----", "------", "-----", "---------")
 			for _, i := range TRACKINGLIST {
- 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t%s\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, i.Percent, i.Emoji)
+				fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t%s\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total, i.Percent, i.Emoji)
 			}
 		} else {
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "Server", "200s", "300s", "400s", "500s", "Failed", "Total")
 			fmt.Fprintf(w, "\n %s\t%s\t%s\t%s\t%s\t%s\t%s\t", "------", "----", "----", "----", "----", "------", "-----")
 			for _, i := range TRACKINGLIST {
- 		       	fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total)
+				fmt.Fprintf(w, "\n %s\t%d\t%d\t%d\t%d\t%d\t%d\t", i.Server, i.Twohundreds, i.Threehundreds, i.Fourhundreds, i.Fivehundreds, i.Failed, i.Total)
 			}
 		}
 		w.Flush()
