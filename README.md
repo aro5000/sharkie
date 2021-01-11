@@ -9,6 +9,15 @@ docker run -it --rm registry.gitlab.com/aro5000/sharkie:latest -u http://example
 docker run -it --rm -p 5000:5000 registry.gitlab.com/aro5000/sharkie:latest -ui=true
 ```
 
+You can also run this inside of a Kubernetes cluster with `kubectl`:
+```
+# Example:
+kubectl run -it --rm sharkie --image=registry.gitlab.com/aro5000/sharkie:latest -- -u http://example.com -c 100
+
+# Older Versions:
+kubectl run -it --rm --generator=run-pod/v1 sharkie --image=registry.gitlab.com/aro5000/sharkie:latest -- -u http://example.com -c 100
+```
+
 ![Example image](./docs/EXAMPLE.png)
 ![Example UI](./docs/UI.png)
 
@@ -71,6 +80,9 @@ sharkie -u example.com -s 1.2.3.4 -s 3.4.5.6
 Track success rate based on expected status code:
 sharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200
 
+  -c int
+        Count of how many requests to send to each server. This is not valid in UI mode.
+        Usage: -c 100
   -e int
         Expected HTTP status code to generate success percentages. For example:
         -e 200 (200-299)
