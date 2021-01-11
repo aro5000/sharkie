@@ -21,6 +21,9 @@ func update() {
 		fmt.Println("Proto:", TDATA.Proto)
 		fmt.Println("Port:", TDATA.Port)
 		fmt.Println("Sleep Time:", TDATA.Sleep)
+		if TDATA.Counter != 0 {
+			fmt.Println("Count:", TDATA.Counter)
+		}
 
 		// Loop through TRACKINGLIST and print all the current values
 		w := new(tabwriter.Writer)

@@ -33,12 +33,15 @@ func main() {
 	flag.BoolVar(&TDATA.SkipTLS, "k", false, "Ignore invalid certificates for TLS connections. (Default is false)\nUsage: -k=true")
 	flag.BoolVar(&TDATA.Emoji, "emoji", true, "Control whether emoji's display or not.\nUsage (to turn off): -emoji=false")
 	flag.BoolVar(&TDATA.Ui, "ui", false, "Enable the UI and HTTP server with -ui=true")
+	flag.IntVar(&TDATA.Counter, "c", 0, "Count of how many requests to send to each server. This is not valid in UI mode.\nUsage: -c 100")
 	flag.Parse()
 	EMOJI = setemoji()
 
 	if !TDATA.Ui {
 		worker(s)
 	} else {
+		// force counter to be 0 for now in UI mode since there is no "final results" page at this time
+		TDATA.Counter = 0
 		ui()
 	}
 }

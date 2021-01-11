@@ -18,6 +18,7 @@ type targetdata struct {
 	Sleep          float64
 	Ui             bool
 	Status         string
+	Counter        int
 }
 
 var TDATA targetdata

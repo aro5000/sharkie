@@ -28,7 +28,7 @@ func MakeHTTPSRequest(server string, index int, wg *sync.WaitGroup) {
 		setStatus(index)
 		time.Sleep((time.Duration(TDATA.Sleep * 1000)) * time.Millisecond)
 
-		if TDATA.Status == "STOP" {
+		if TDATA.Status == "STOP" || (TRACKINGLIST[index].Total >= TDATA.Counter && TDATA.Counter != 0) {
 			break
 		}
 	}
@@ -56,7 +56,7 @@ func MakeHTTPRequest(server string, index int, wg *sync.WaitGroup) {
 		setStatus(index)
 		time.Sleep((time.Duration(TDATA.Sleep * 1000)) * time.Millisecond)
 
-		if TDATA.Status == "STOP" {
+		if TDATA.Status == "STOP" || (TRACKINGLIST[index].Total >= TDATA.Counter && TDATA.Counter != 0) {
 			break
 		}
 	}

@@ -120,7 +120,9 @@ func worker(s []string) {
 	}
 	wg.Wait()
 
-	fmt.Println("[!] Stopping threads and starting over.\n ")
+	if TDATA.Ui {
+		fmt.Println("[!] Stopping threads and starting over.\n ")
+	}
 	cleanup()
 }
 
