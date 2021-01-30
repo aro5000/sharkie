@@ -1,6 +1,9 @@
 package main
 
 import (
+	"flag"
+	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -19,6 +22,7 @@ type targetdata struct {
 	Ui             bool
 	Status         string
 	Counter        int
+	Headers        map[string]string
 }
 
 var TDATA targetdata
@@ -71,4 +75,19 @@ func setemoji() map[string]string {
 
 	}
 	return emoji
+}
+
+func setheaders(x []string) {
+	TDATA.Headers = make(map[string]string)
+
+	for _, i := range x {
+		// split on ":" to get the keys and values
+		splitValue := strings.Split(i, ":")
+		if len(splitValue) != 2 {
+			fmt.Println("[!] Invalid header value:", i)
+			flag.Usage()
+			os.Exit(1)
+		}
+		TDATA.Headers[strings.TrimSpace(splitValue[0])] = strings.TrimSpace(splitValue[1])
+	}
 }

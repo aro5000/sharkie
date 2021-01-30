@@ -66,7 +66,7 @@ sharkie -u https://example.com -s west.company.com -s east.company.com -e 200
 ```
 
 # CLI Flags
-The following is the output from ```sharkie -h```
+The following is the output from ```sharkie -help```
 ```
 Welcome to Sharkie! A CLI tool for tracking HTTP response codes.
 Example:
@@ -91,6 +91,10 @@ sharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200
   -emoji
         Control whether emoji's display or not.
         Usage (to turn off): -emoji=false (default true)
+  -h value
+        Add headers to the HTTP requests. Separate the key/value pairs with ':'
+        For Example:
+        -h "Authorization: Basic dXNlcjpwYXNzd29yZA=="
   -k    Ignore invalid certificates for TLS connections. (Default is false)
         Usage: -k=true
   -s value

@@ -15,8 +15,7 @@ import (
 func MakeHTTPSRequest(server string, index int, wg *sync.WaitGroup) {
 	for {
 		req, _ := http.NewRequest("GET", TDATA.Url, nil)
-		req.Header.Set("User-Agent", "sharkie")
-
+		req = setRequestHeaders(req)
 		client := setTlsClient(server)
 		resp, err := client.Do(req)
 		if err != nil {
@@ -28,7 +27,7 @@ func MakeHTTPSRequest(server string, index int, wg *sync.WaitGroup) {
 		setStatus(index)
 		time.Sleep((time.Duration(TDATA.Sleep * 1000)) * time.Millisecond)
 
-		if TDATA.Status == "STOP" || (TRACKINGLIST[index].Total >= TDATA.Counter && TDATA.Counter != 0) {
+		if checkEndCondition(index) {
 			break
 		}
 	}
@@ -38,7 +37,7 @@ func MakeHTTPSRequest(server string, index int, wg *sync.WaitGroup) {
 func MakeHTTPRequest(server string, index int, wg *sync.WaitGroup) {
 	for {
 		req, _ := http.NewRequest("GET", TDATA.Proto+server+TDATA.Path, nil)
-		req.Header.Set("User-Agent", "sharkie")
+		req = setRequestHeaders(req)
 		req.Host = TDATA.Host
 		client := &http.Client{
 			CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -56,7 +55,7 @@ func MakeHTTPRequest(server string, index int, wg *sync.WaitGroup) {
 		setStatus(index)
 		time.Sleep((time.Duration(TDATA.Sleep * 1000)) * time.Millisecond)
 
-		if TDATA.Status == "STOP" || (TRACKINGLIST[index].Total >= TDATA.Counter && TDATA.Counter != 0) {
+		if checkEndCondition(index) {
 			break
 		}
 	}
@@ -165,4 +164,26 @@ func setTlsClient(server string) *http.Client {
 			Timeout: time.Second * 10,
 		}
 	}
+}
+
+func checkEndCondition(index int) bool {
+	if TDATA.Status == "STOP" || (TRACKINGLIST[index].Total >= TDATA.Counter && TDATA.Counter != 0) {
+		return true
+	} else {
+		return false
+	}
+}
+
+func setRequestHeaders(req *http.Request) *http.Request {
+	// set default user-agent
+	req.Header.Set("User-Agent", "sharkie")
+
+	// if there are user-defined headers, set those as well
+	if len(TDATA.Headers) > 0 {
+		for k, v := range TDATA.Headers {
+			req.Header.Set(k, v)
+		}
+	}
+
+	return req
 }
