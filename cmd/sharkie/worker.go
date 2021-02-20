@@ -107,7 +107,7 @@ func worker(s []string) {
 	wg.Add(len(s))
 
 	for index, i := range s {
-		TRACKINGLIST = append(TRACKINGLIST, tracking{0, 0, 0, 0, 0, 0, i, 0.0, ""})
+		TRACKINGLIST = append(TRACKINGLIST, tracking{0, 0, 0, 0, 0, 0, i, 0.0, "", ""})
 		if TDATA.Proto == "https://" {
 			go MakeHTTPSRequest(i, index, &wg)
 		} else {

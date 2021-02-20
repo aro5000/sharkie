@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"net"
 	"net/http"
 	"strings"
@@ -19,9 +20,9 @@ func MakeHTTPSRequest(server string, index int, wg *sync.WaitGroup) {
 		client := setTlsClient(server)
 		resp, err := client.Do(req)
 		if err != nil {
-			evaluate(0, index)
+			evaluate(0, index, server, err.Error())
 		} else {
-			evaluate(resp.StatusCode, index)
+			evaluate(resp.StatusCode, index, server, "")
 		}
 
 		setStatus(index)
@@ -47,9 +48,9 @@ func MakeHTTPRequest(server string, index int, wg *sync.WaitGroup) {
 		}
 		resp, err := client.Do(req)
 		if err != nil {
-			evaluate(0, index)
+			evaluate(0, index, server, err.Error())
 		} else {
-			evaluate(resp.StatusCode, index)
+			evaluate(resp.StatusCode, index, server, "")
 		}
 
 		setStatus(index)
@@ -62,7 +63,7 @@ func MakeHTTPRequest(server string, index int, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func evaluate(response_code int, index int) {
+func evaluate(response_code int, index int, server string, errstring string) {
 	switch {
 	case (200 <= response_code && response_code <= 299):
 		TRACKINGLIST[index].Twohundreds += 1
@@ -76,6 +77,10 @@ func evaluate(response_code int, index int) {
 		TRACKINGLIST[index].Failed += 1
 	}
 	TRACKINGLIST[index].Total += 1
+
+	if TDATA.Verbose {
+		TRACKINGLIST[index].Details = fmt.Sprintf("Server: %v | Specific Status: %v | Error: %v", server, response_code, errstring)
+	}
 }
 
 func setStatus(index int) {

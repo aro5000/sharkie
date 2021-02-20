@@ -6,7 +6,7 @@ The quickest way to get started is by using the pre-built docker container:
 docker run -it --rm registry.gitlab.com/aro5000/sharkie:latest -u http://example.com
 
 # UI mode:
-docker run -it --rm -p 5000:5000 registry.gitlab.com/aro5000/sharkie:latest -ui=true
+docker run -it --rm -p 5000:5000 registry.gitlab.com/aro5000/sharkie:latest -ui
 ```
 
 You can also run this inside of a Kubernetes cluster with `kubectl`:
@@ -96,7 +96,7 @@ sharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200
         For Example:
         -h "Authorization: Basic dXNlcjpwYXNzd29yZA=="
   -k    Ignore invalid certificates for TLS connections. (Default is false)
-        Usage: -k=true
+        Usage: -k
   -s value
         Server IP or hostname (127.0.0.1, example.com)
   -sleep float
@@ -104,7 +104,8 @@ sharkie -u https://example.com -s 1.2.3.4 -s 3.4.5.6 -e 200
   -u string
         URL to target
   -ui
-        Enable the UI and HTTP server with -ui=true
+        Enable the UI and HTTP server with -ui
+  -v    Enable verbose output with -v
 ```
 
 # Build

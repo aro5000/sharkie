@@ -1,15 +1,16 @@
-    <div id="scantable">
-    {{ range .TL }}
-      <div class="row mb-3">
-        <div class="col-sm-3 themed-grid-col trimText">{{ .Server }}</div>
-        <div class="col themed-grid-col">{{ .Twohundreds }}</div>
-        <div class="col themed-grid-col">{{ .Threehundreds }}</div>
-        <div class="col themed-grid-col">{{ .Fourhundreds }}</div>
-        <div class="col themed-grid-col">{{ .Fivehundreds }}</div>
-        <div class="col themed-grid-col">{{ .Failed }}</div>
-        <div class="col themed-grid-col">{{ .Total }}</div>
-        <div class="col themed-grid-col">{{ printf "%.2f" .Percent }}</div>
-        <div class="col themed-grid-col">{{ .Emoji }}</div>
-      </div>
-    {{ end }}
-    </div>
+<div id="scantable">
+  {{ range $index, $target := .TL }}
+  <div class="row mb-3">
+    <div class="col-sm-3 themed-grid-col trimText">{{ .Server }}</div>
+    <div class="col themed-grid-col">{{ .Twohundreds }}</div>
+    <div class="col themed-grid-col">{{ .Threehundreds }}</div>
+    <div class="col themed-grid-col">{{ .Fourhundreds }}</div>
+    <div class="col themed-grid-col">{{ .Fivehundreds }}</div>
+    <div class="col themed-grid-col">{{ .Failed }}</div>
+    <div class="col themed-grid-col">{{ .Total }}</div>
+    <div class="col themed-grid-col">{{ printf "%.2f" .Percent }}</div>
+    <div class="col themed-grid-col">{{ .Emoji }}</div>
+  </div>
+  {{ .Details }}
+  {{ end }}
+</div>
