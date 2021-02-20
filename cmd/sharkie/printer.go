@@ -46,6 +46,15 @@ func update() {
 			}
 		}
 		w.Flush()
+
+		// If Verbose is enabled, print a detailed section
+		if TDATA.Verbose {
+			fmt.Println("\n\nDETAILS:")
+			for _, i := range TRACKINGLIST {
+				fmt.Println(i.Details + "\n")
+			}
+		}
+
 		fmt.Println("\n\n ")
 		time.Sleep((time.Duration(500)) * time.Millisecond)
 	}

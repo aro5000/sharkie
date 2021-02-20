@@ -23,6 +23,7 @@ type targetdata struct {
 	Status         string
 	Counter        int
 	Headers        map[string]string
+	Verbose        bool
 }
 
 var TDATA targetdata
@@ -37,6 +38,7 @@ type tracking struct {
 	Server        string
 	Percent       float64
 	Emoji         string
+	Details       string
 }
 
 var TRACKINGLIST []tracking
