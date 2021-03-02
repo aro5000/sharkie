@@ -3,7 +3,9 @@ WORKDIR /app
 ADD cmd/ ./cmd
 ENV GOPATH /go
 ENV CGO_ENABLED=0
-RUN go test ./cmd/sharkie
+
+ARG DISABLE_TESTS
+RUN if [[ "$DISABLE_TESTS" = "true" ]] ; then echo Skipping Tests ; else go test ./cmd/sharkie ; fi
 RUN go build ./cmd/sharkie
 
 FROM alpine:latest

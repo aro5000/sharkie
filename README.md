@@ -128,7 +128,8 @@ go get gitlab.com/aro5000/sharkie
 ## Docker:
 The easiest way to use sharkie without installing golang is with Docker:
 ```
-docker build -t sharkie .
+docker build -t sharkie . # build with unit tests inside the image
+docker build -t sharkie . --build-arg DISABLE_TESTS=true # build without unit tests inside the image
 docker run -it --rm sharkie -u example.com
 ```
 
