@@ -3,7 +3,7 @@ services:
 
 stages:
   - build
-  - build-master
+  - build-main
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
@@ -16,10 +16,10 @@ build:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
   except:
-    - master
+    - main
 
-build-master:
-  stage: build-master
+build-main:
+  stage: build-main
   image: docker:stable
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
@@ -28,4 +28,4 @@ build-master:
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest 
   only:
-    - master
+    - main
